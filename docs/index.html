@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Racing &amp; Rewards · Research recreation
+  </title>
+  <meta content="An independent, runnable recreation of Mixed-integer optimization-based planning for autonomous racing with obstacles and rewards, with interactive car scenes and transparent synthetic evaluations." name="description"/>
+  <meta content="#ffffff" name="theme-color"/>
+  <meta content="Mixed-integer optimization-based planning for autonomous racing with obstacles and rewards" property="og:title"/>
+  <meta content="Interactive research recreation · runnable planner · synthetic car evaluation" property="og:description"/>
+  <meta content="https://RudolfReiter.github.io/racing-rewards/assets/driving-scene.png" property="og:image"/>
+  <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <header class="header wrap">
+   <a class="wordmark" href="#">
+    Racing &amp; Rewards
+    <span>
+     Research recreation
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="#simulation">
+     Simulation
+    </a>
+    <a href="#research">
+     Research
+    </a>
+    <a href="#results">
+     Results
+    </a>
+    <a href="#reproduce">
+     Code
+    </a>
+   </nav>
+  </header>
+  <main>
+   <section class="hero wrap">
+    <span class="badge">
+     Published at IFAC Conference on Nonlinear Model Predictive Control · NMPC 2021
+    </span>
+    <h1>
+     Mixed-integer optimization-based planning for autonomous racing with obstacles and rewards
+    </h1>
+    <p class="authors">
+     Rudolf Reiter · Martin Kirchengast · Daniel Watzenig · Moritz Diehl
+    </p>
+    <p class="intro">
+     How should a race car choose between the racing line, an obstacle-free detour, and an optional reward? Explore the paper’s two-stage planning idea: discrete decisions first, continuous motion second.
+    </p>
+    <div class="actions">
+     <a class="button primary" href="#simulation">
+      Explore the car example
+     </a>
+     <a class="button" href="https://publications.syscop.de/Reiter2021a.pdf">
+      Read the paper ↗
+     </a>
+     <a class="button" href="https://github.com/RudolfReiter/racing-rewards">
+      GitHub repository ↗
+     </a>
+     <a class="button" href="https://doi.org/10.1016/j.ifacol.2021.08.530">
+      Publication DOI ↗
+     </a>
+    </div>
+    <div class="notice">
+     <strong>
+      Recreated implementation · not the original repository.
+     </strong>
+     This independent implementation makes the core planning ideas runnable. Every result below comes from a new synthetic experiment; it is not an original paper result.
+    </div>
+   </section>
+   <section class="section wrap" id="simulation">
+    <div class="section-head">
+     <h2>
+      Watch obstacle and reward decisions become a driving plan
+     </h2>
+     <p>
+      Select a track scene and a reward preference. The blue car follows the computed plan; the orange ghost follows the reference-line-priority plan at the same elapsed time.
+     </p>
+    </div>
+    <ol class="steps">
+     <li>
+      <strong>
+       1. Choose a preference
+      </strong>
+      Compare three separately optimized reward weights.
+     </li>
+     <li>
+      <strong>
+       2. Follow the decisions
+      </strong>
+      Red objects block the path. Green gates offer optional rewards.
+     </li>
+     <li>
+      <strong>
+       3. Inspect the tradeoff
+      </strong>
+      Use the timeline to compare path, drive time, and collected rewards.
+     </li>
+    </ol>
+    <div class="toolbar">
+     <div class="field">
+      <label for="scenario">
+       Scene
+      </label>
+      <select id="scenario">
+      </select>
+     </div>
+     <div class="field">
+      <label for="strategy">
+       Planner setting
+      </label>
+      <select id="strategy">
+      </select>
+     </div>
+     <div aria-label="Camera view" class="view-buttons" role="group">
+      <button aria-pressed="true" class="active" id="overview">
+       Overview
+      </button>
+      <button aria-pressed="false" id="follow">
+       Smooth follow
+      </button>
+     </div>
+    </div>
+    <div class="scene">
+     <canvas aria-label="Interactive projected driving scene. Use the controls below to play, pause, or inspect time." id="driving-canvas">
+     </canvas>
+     <div class="scene-top">
+      <span id="scene-title">
+      </span>
+      <span id="scene-method">
+      </span>
+     </div>
+     <div class="scene-bottom">
+      <span class="blue">
+       Blue · selected plan
+      </span>
+      <span class="orange">
+       Orange · comparison ghost
+      </span>
+      <span id="live-state">
+      </span>
+     </div>
+    </div>
+    <div class="controls">
+     <button aria-pressed="false" class="button primary" id="play">
+      Play
+     </button>
+     <button class="button" id="restart">
+      Restart
+     </button>
+     <label class="sr-only" for="timeline">
+      Elapsed time
+     </label>
+     <input id="timeline" max="6" min="0" step="0.01" type="range" value="0"/>
+     <span class="clock" id="clock">
+     </span>
+     <label class="sr-only" for="speed">
+      Playback speed
+     </label>
+     <select id="speed">
+      <option value=".5">
+       0.5×
+      </option>
+      <option selected="" value="1">
+       1×
+      </option>
+      <option value="2">
+       2×
+      </option>
+     </select>
+    </div>
+    <div class="toggles">
+     <label>
+      <input checked="" id="ghost" type="checkbox"/>
+      Show comparison ghost
+     </label>
+     <label>
+      <input id="corridor" type="checkbox"/>
+      Show selected corridor
+     </label>
+     <span>
+      Starts paused · no automatic looping
+     </span>
+    </div>
+    <p class="scene-description" id="scenario-description">
+    </p>
+    <div class="metrics" id="metrics">
+    </div>
+    <div class="charts">
+     <article class="chart">
+      <h3>
+       Selected path and object locations
+      </h3>
+      <p>
+       Lateral position relative to the track center. The blue line shows the selected plan; orange shows the reference-line-priority comparison.
+      </p>
+      <svg aria-label="Lateral path and object locations" id="path-chart" role="img">
+      </svg>
+      <div class="chart-note">
+       Red rectangles: obstacles · green rectangles: reward gates. Collision checks use larger, inflated obstacle bounds.
+      </div>
+     </article>
+     <article class="chart">
+      <h3>
+       Planned speed over time
+      </h3>
+      <p>
+       Blue: selected plan. Orange: comparison. The vertical cursor follows the car at the same elapsed time.
+      </p>
+      <svg aria-label="Speed in metres per second over elapsed time" id="speed-chart" role="img">
+      </svg>
+      <div class="chart-note">
+       Speed follows curvature and acceleration limits along each path.
+      </div>
+     </article>
+    </div>
+    <div class="decisions" id="decisions">
+    </div>
+   </section>
+   <section class="section wrap" id="research">
+    <div class="section-head">
+     <h2>
+      The research behind the demonstration
+     </h2>
+     <p>
+      The paper combines discrete obstacle and reward decisions with continuous vehicle motion planning. The implementation below preserves that structure with the simplifications stated here.
+     </p>
+    </div>
+    <div class="method-grid">
+     <article>
+      <span class="step-no">
+       01
+      </span>
+      <h3>
+       Choose the corridor
+      </h3>
+      <p>
+       A mixed-integer linear program selects a passing side for each obstacle and whether to enter each reward gate. Absolute lateral deviation and slope compete with reward value.
+      </p>
+      <div class="equation">
+       min deviation + slope − rewards
+      </div>
+     </article>
+     <article>
+      <span class="step-no">
+       02
+      </span>
+      <h3>
+       Refine the path
+      </h3>
+      <p>
+       A spline optimizer keeps the selected corridor and progressively tightens its bounds. The final solve uses no corridor relaxation.
+      </p>
+      <div class="equation">
+       relaxation: 1.5 → 0.4 → 0 m
+      </div>
+     </article>
+     <article>
+      <span class="step-no">
+       03
+      </span>
+      <h3>
+       Construct the motion
+      </h3>
+      <p>
+       Curvature limits the speed. Forward and backward passes enforce longitudinal acceleration and braking limits along the path.
+      </p>
+      <div class="equation">
+       v² |κ| ≤ 5 m/s²
+      </div>
+     </article>
+    </div>
+    <div class="limitations">
+     <strong>
+      What this recreation does and does not recover
+     </strong>
+     This is a simplified recreation, not the original Roborace implementation. It uses synthetic tracks, short reward gates, a spline path optimizer, and a curvature-based speed profile. It does not reproduce the paper’s nonlinear multiple-shooting vehicle OCP, slack-penalty continuation, embedded timings, or Bedford experiments. The animation shows a computed plan, not measured tracking performance. See
+     <a href="assets/source.zip">
+      REPRODUCTION.md in the source archive
+     </a>
+     for the equation-to-code mapping and evaluation protocol.
+    </div>
+   </section>
+   <section class="section wrap" id="results">
+    <div class="section-head">
+     <h2>
+      Evaluation on synthetic car examples
+     </h2>
+     <p>
+      These tables are populated from the exact solver outputs used by the animation. Download the
+      <a href="data/summary.json">
+       summary data
+      </a>
+      or the
+      <a href="data/experiment.json">
+       full trajectories
+      </a>
+      .
+     </p>
+    </div>
+    <div class="table-wrap">
+     <table>
+      <caption class="sr-only">
+       Recreated synthetic evaluation results
+      </caption>
+      <thead>
+       <tr>
+        <th scope="col">
+         Scene
+        </th>
+        <th scope="col">
+         Setting
+        </th>
+        <th scope="col">
+         Drive time
+        </th>
+        <th scope="col">
+         Rewards
+        </th>
+        <th scope="col">
+         Inflated clearance
+        </th>
+        <th scope="col">
+         Detailed path
+        </th>
+       </tr>
+      </thead>
+      <tbody id="results-body">
+      </tbody>
+     </table>
+    </div>
+    <div class="notes">
+     <p>
+      All nine runs use the same three synthetic 240 m track scenes. Clearance is sampled in Frenet coordinates against inflated rectangular obstacles, including the vehicle footprint allowance. It is not an exact Euclidean body distance.
+     </p>
+     <p>
+      A higher reward weight can increase travel time. The optimizer’s surrogate objective is not lap time, and these numbers are not a reproduction of the original paper’s results.
+     </p>
+    </div>
+    <figure class="figure">
+     <img alt="Comparison of the recreated planner settings across three car scenes" height="450" loading="lazy" src="assets/evaluation.svg" width="1200"/>
+     <figcaption>
+      Generated from the committed evaluation data. All values describe this recreation.
+     </figcaption>
+    </figure>
+   </section>
+   <section class="section wrap" id="reproduce">
+    <div class="section-head">
+     <h2>
+      Run the planner and inspect the results
+     </h2>
+     <p>
+      A self-contained Python package, deterministic examples, numerical checks, and a static website. No external assets or account are required to view the demonstration.
+     </p>
+    </div>
+    <div class="reproduce-grid">
+     <div class="terminal">
+      <pre><code>python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+python -m racing_rewards.experiment
+python scripts/plot_results.py
+python -m pytest -q
+python -m http.server 8000 --directory docs</code></pre>
+     </div>
+     <div>
+      <p>
+       Run these commands from the repository root after cloning or extracting the source archive. Open
+       <a href="http://localhost:8000">
+        localhost:8000
+       </a>
+       to view the page.
+      </p>
+      <p>
+       Python 3.9–3.12 is recommended for the pinned reproduction environment. The exported data ships with the repository, so viewing the page does not require running the optimizer. Solve times depend on the machine and solver versions.
+      </p>
+      <div class="actions">
+       <a class="button primary" download="" href="assets/source.zip">
+        Download full source
+       </a>
+       <a class="button" href="https://github.com/RudolfReiter/racing-rewards">
+        Browse repository ↗
+       </a>
+      </div>
+     </div>
+    </div>
+    <div class="citation">
+     <h3>
+      Cite the research
+     </h3>
+     <p>
+      Rudolf Reiter, Martin Kirchengast, Daniel Watzenig, Moritz Diehl. Mixed-integer optimization-based planning for autonomous racing with obstacles and rewards. IFAC PapersOnLine 54(6), 99–106 (2021).
+      <a href="https://doi.org/10.1016/j.ifacol.2021.08.530">
+       doi:10.1016/j.ifacol.2021.08.530
+      </a>
+      .
+     </p>
+     <p>
+      Software and new figures: MIT license. The original paper retains its own publication license. This repository contains a new implementation and does not redistribute the paper.
+     </p>
+    </div>
+   </section>
+  </main>
+  <footer class="footer wrap">
+   <span>
+    Independent recreation · 2021 research
+   </span>
+   <div>
+    <a href="https://publications.syscop.de/Reiter2021a.pdf">
+     Paper
+    </a>
+    <a href="https://github.com/RudolfReiter/racing-rewards">
+     Source
+    </a>
+    <a href="data/summary.json">
+     Data
+    </a>
+   </div>
+  </footer>
+  <noscript>
+   <p class="noscript">
+    Enable JavaScript for the interactive scene. The evaluation figure, source archive, and paper links remain available.
+   </p>
+  </noscript>
+  <script src="data/experiment.js">
+  </script>
+  <script src="scene.js">
+  </script>
+  <script src="app.js">
+  </script>
+ </body>
+</html>

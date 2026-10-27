@@ -1,0 +1,179 @@
+[
+  {
+    "scenario": "slalom",
+    "method": "line",
+    "drive_time_s": 10.229330176917594,
+    "path_length_m": 240.237027018501,
+    "collected": [
+      false,
+      false,
+      false
+    ],
+    "reward_count": 0,
+    "reward_value": 0.0,
+    "min_inflated_clearance_m": 0.02300033594412998,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000001,
+    "max_steering_rad": 0.03075440022209826,
+    "milp_ms": 41.84366198023781,
+    "refinement_ms": 2351.186604006216,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "slalom",
+    "method": "balanced",
+    "drive_time_s": 10.84442756414483,
+    "path_length_m": 240.38920471933187,
+    "collected": [
+      true,
+      false,
+      false
+    ],
+    "reward_count": 1,
+    "reward_value": 1.0,
+    "min_inflated_clearance_m": 0.023977616521444034,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000001,
+    "max_steering_rad": 0.038257651385972376,
+    "milp_ms": 111.42972396919504,
+    "refinement_ms": 2256.302145018708,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "slalom",
+    "method": "rewards",
+    "drive_time_s": 11.393628587682182,
+    "path_length_m": 241.22944221192094,
+    "collected": [
+      true,
+      true,
+      true
+    ],
+    "reward_count": 3,
+    "reward_value": 3.0,
+    "min_inflated_clearance_m": 0.10000000000000586,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000001,
+    "max_steering_rad": 0.05430853701504744,
+    "milp_ms": 55.985182989388704,
+    "refinement_ms": 2432.293431018479,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "choice",
+    "method": "line",
+    "drive_time_s": 10.067138630143043,
+    "path_length_m": 240.84715361837408,
+    "collected": [
+      false,
+      false,
+      false
+    ],
+    "reward_count": 0,
+    "reward_value": 0.0,
+    "min_inflated_clearance_m": 0.021052256367895872,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000002,
+    "max_steering_rad": 0.025256032627229034,
+    "milp_ms": 21.960082987789065,
+    "refinement_ms": 2734.05594099313,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "choice",
+    "method": "balanced",
+    "drive_time_s": 10.743928312429066,
+    "path_length_m": 241.32493837517052,
+    "collected": [
+      false,
+      true,
+      false
+    ],
+    "reward_count": 1,
+    "reward_value": 1.7,
+    "min_inflated_clearance_m": 0.08661669238558778,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000001,
+    "max_steering_rad": 0.03979357321733264,
+    "milp_ms": 73.86044599115849,
+    "refinement_ms": 2158.520184981171,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "choice",
+    "method": "rewards",
+    "drive_time_s": 11.785939385111556,
+    "path_length_m": 241.95707259081757,
+    "collected": [
+      true,
+      true,
+      true
+    ],
+    "reward_count": 3,
+    "reward_value": 3.7,
+    "min_inflated_clearance_m": 0.22848783913322457,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000001,
+    "max_steering_rad": 0.06075160091965821,
+    "milp_ms": 33.658154017757624,
+    "refinement_ms": 2200.612129003275,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "narrow",
+    "method": "line",
+    "drive_time_s": 10.278261480310013,
+    "path_length_m": 241.19145980899054,
+    "collected": [
+      false,
+      false
+    ],
+    "reward_count": 0,
+    "reward_value": 0.0,
+    "min_inflated_clearance_m": 0.003654690692471263,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000001,
+    "max_steering_rad": 0.03832679386828452,
+    "milp_ms": 32.17780403792858,
+    "refinement_ms": 2121.6801760019735,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "narrow",
+    "method": "balanced",
+    "drive_time_s": 10.309293995803657,
+    "path_length_m": 241.30713125867234,
+    "collected": [
+      true,
+      false
+    ],
+    "reward_count": 1,
+    "reward_value": 1.0,
+    "min_inflated_clearance_m": 0.007807517293350941,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.0,
+    "max_steering_rad": 0.039641331118006946,
+    "milp_ms": 55.189531994983554,
+    "refinement_ms": 2057.491782994475,
+    "milp_gap": 0.0
+  },
+  {
+    "scenario": "narrow",
+    "method": "rewards",
+    "drive_time_s": 11.478849271080696,
+    "path_length_m": 242.49369486316073,
+    "collected": [
+      true,
+      true
+    ],
+    "reward_count": 2,
+    "reward_value": 2.0,
+    "min_inflated_clearance_m": 0.041785982968471025,
+    "collision_free": true,
+    "max_lateral_acceleration_mps2": 5.000000000000001,
+    "max_steering_rad": 0.061222761950100596,
+    "milp_ms": 33.23728800751269,
+    "refinement_ms": 2175.8440349949524,
+    "milp_gap": 0.0
+  }
+]

@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "Please cite the original paper when using this recreation."
+type: software
+title: "Racing & Rewards — recreated implementation"
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/RudolfReiter/racing-rewards"
+authors:
+  - family-names: Reiter
+    given-names: Rudolf
+preferred-citation:
+  type: article
+  title: "Mixed-integer optimization-based planning for autonomous racing with obstacles and rewards"
+  doi: "10.1016/j.ifacol.2021.08.530"
+  year: 2021
+  authors:
+    - family-names: "Reiter"
+      given-names: "Rudolf"
+    - family-names: "Kirchengast"
+      given-names: "Martin"
+    - family-names: "Watzenig"
+      given-names: "Daniel"
+    - family-names: "Diehl"
+      given-names: "Moritz"
